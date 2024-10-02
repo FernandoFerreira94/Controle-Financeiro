@@ -66,6 +66,84 @@ class BancoDeDados {
     // setItem('name da key a ser citada' ,  'retorno do valor ')
     localStorage.setItem("id", id);
   }
+
+  // função para recupear os dados do localStorage
+  recuperarTodosRegistros() {
+    // array despesas
+    let listaDepesas = Array();
+    // getItem recupera valores do localStorage
+    let id = localStorage.getItem("id");
+    //loop recupear dados despesas
+    for (let i = 1; i <= id; i++) {
+      // recuperando dados do localstorage
+      let despesas = localStorage.getItem(i);
+      // transformando arquivo JSON para OBJETO
+      despesas = JSON.parse(despesas);
+
+      // acrecetando valor de id
+      // caso algum dados for excluido, o if-continue ira pular o dados excluido pois ele retornara como null
+      if (despesas === null) {
+        continue;
+      }
+      despesas.id = i;
+      // incremetando dados da (despesas) no array listaDepesas
+      listaDepesas.push(despesas);
+    }
+    return listaDepesas;
+  }
+
+  // função de pesquisar e filtrar os dados das despesas
+  pesquisa(despesas) {
+    // parametro (despesas) recupera recuperarDespesas() que retorna os valores digitado no campo html
+
+    let despesasFiltradas = Array();
+    // recuperando return da funcção recuperarTodosRegistro() que retorna um array dos dados
+    despesasFiltradas = this.recuperarTodosRegistros();
+    // iremos comparar e filtrar com despesasFiltradas que retorna os dados ja existente no localStorage com (d) recuperarTodosRegistros() retorna os dados digitado em campo.
+
+    // year
+    if (despesas.year != "") {
+      despesasFiltradas = despesasFiltradas.filter(
+        (d) => d.year == despesas.year
+      );
+    }
+
+    // month
+    if (despesas.month != "") {
+      despesasFiltradas = despesasFiltradas.filter(
+        (d) => d.month == despesas.month
+      );
+    }
+
+    //day
+    if (despesas.day != "") {
+      despesasFiltradas = despesasFiltradas.filter(
+        (d) => d.day == despesas.day
+      );
+    }
+
+    //type
+    if (despesas.type != "") {
+      despesasFiltradas = despesasFiltradas.filter(
+        (d) => d.type == despesas.type
+      );
+    }
+
+    //description
+    if (despesas.description != "") {
+      despesasFiltradas = despesasFiltradas.filter(
+        (d) => d.description == despesas.description
+      );
+    }
+
+    //valor
+    if (despesas.valor != "") {
+      despesasFiltradas = despesasFiltradas.filter(
+        (d) => d.valor == despesas.valor
+      );
+    }
+    return despesasFiltradas;
+  }
 }
 
 let bancoDeDados = new BancoDeDados();
@@ -90,46 +168,152 @@ let cadastrarDespesas = {
       valor.value
     );
 
-    // recuperando valor do campo original no HTML
-    year.value = "";
-    month.value = "";
-    day.value = "";
-    type.value = "";
-    description.value = "";
-    valor.value = "";
-
     //Controle de validação de cadastro
     // Modal msg sucesso ou erro
 
     if (despesas.validarDados()) {
       // msg de sucesso na gravação
-      bancoDeDados.gravar(despesas); // chamando a função gravar para podermos ter acesso ao objeto convertido a JSON no local Storage
+      bancoDeDados.gravar(despesas); // chamando a função gravar para podermos ter acesso ao objeto convertido a JSON no local
+
       //função de ativar o modal
       $("#registro-Despesas").modal("show"); // usando JQuery modificar Bootstrap para #btn cadastrar
+
       //titulo
       document.getElementById("tituloModal").innerHTML = "Sucesso";
       document.getElementById("tituloModal").className =
         "modal-title fs-5 text-success";
+
       //texto body
       document.getElementById("textModal").innerHTML =
         "Despesa gravada com sucesso!";
+
       //botao
       document.getElementById("btnModal").innerHTML = "Proxima despesa";
       document.getElementById("btnModal").className = "btn btn-success ";
+
+      // recuperando valor do campo original no HTML
+      year.value = "";
+      month.value = "";
+      day.value = "";
+      type.value = "";
+      description.value = "";
+      valor.value = "";
     } else {
       // msg de erro na gravação
       //função de ativar o modal
       $("#registro-Despesas").modal("show"); // usando JQuery modificar Bootstrap para #btn cadastrar
+
       //titulo
       document.getElementById("tituloModal").innerHTML = "Erro na Gravação";
       document.getElementById("tituloModal").className =
         "modal-title fs-5 text-danger";
+
       //texto body
       document.getElementById("textModal").innerHTML =
         " Verifica se todos os campos foram preenchido";
+
       //botao
       document.getElementById("btnModal").innerHTML = "Voltar";
       document.getElementById("btnModal").className = "btn btn-dark ";
     }
   },
+};
+
+// função contruir lista de despesas dinamico
+let carregaListaDepesas = () => {
+  // array da lista de despesas
+  let listaDepesas = Array();
+
+  //atribuindo o valor do retorno da função ao array
+  listaDepesas = bancoDeDados.recuperarTodosRegistros();
+
+  // elemento tbody da pagina consulta.html
+  let tbody = document.getElementById("tbody");
+
+  // percorrer o array listaDepesas, listando cada dispesa de forma dinamica
+  listaDepesas.forEach((d) => {
+    //insertRow() acrecenta linhas na tabela
+    //inserindo linha no tbody
+    let row = tbody.insertRow();
+
+    //unsertCell() acrecenta colunas na tabela
+    // inserindo colunas no tbody
+    row.insertCell(0).innerHTML = `${d.day}/${d.month}/${d.year}`; // data
+    row.insertCell(1).innerHTML = `${d.type}`; // tipo
+    row.insertCell(2).innerHTML = `${d.description}`; // descrição
+    row.insertCell(3).innerHTML = `${d.valor}`; // valor
+    row.insertCell(4).innerHTML = ""; // botao excluir
+
+    // craindo button de excluir
+    let btnExcluir = document.createElement("button");
+    // estilizando o btn
+    btnExcluir.className = "btn btn-outline-danger btn-sm";
+    //incremetando (X)
+    btnExcluir.innerHTML = "<i class='fas fa-times'></i>";
+    btnExcluir.id = `id_despesas${d.id}`;
+    // função de excluir despesa
+    btnExcluir.onclick = () => {
+      // excluindo despesas direto do localstorage
+      localStorage.removeItem(d.id);
+      //refresh da pagina, pois quando excluimos as tags ja criada no html nao desaparece, so depois do realod
+      location.reload();
+    };
+
+    row.insertCell(4).append(btnExcluir); // botao excluir
+  });
+};
+
+let pesquisaDespesas = () => {
+  let year = document.getElementById("year");
+  let month = document.getElementById("month");
+  let day = document.getElementById("day");
+  let type = document.getElementById("type");
+  let description = document.getElementById("description");
+  let valor = document.getElementById("valor");
+
+  let despesas = new Despesas(
+    year.value,
+    month.value,
+    day.value,
+    type.value,
+    description.value,
+    valor.value
+  );
+  let despesasPesquisar = bancoDeDados.pesquisa(despesas);
+
+  carregaListaDepesas();
+  // elemento tbody da pagina consulta.html
+  let tbody = document.getElementById("tbody");
+  // limpando o campo do tbody para que os valores do filter fico isolado no tbody
+  tbody.innerHTML = "";
+  // percorrer o array listaDepesas, listando cada dispesa de forma dinamica
+  despesasPesquisar.forEach((d) => {
+    //insertRow() acrecenta linhas na tabela
+    //inserindo linha no tbody
+    let row = tbody.insertRow();
+
+    //unsertCell() acrecenta colunas na tabela
+    // inserindo colunas no tbody
+    row.insertCell(0).innerHTML = `${d.day}/${d.month}/${d.year}`; // data
+    row.insertCell(1).innerHTML = `${d.type}`; // tipo
+    row.insertCell(2).innerHTML = `${d.description}`; // descrição
+    row.insertCell(3).innerHTML = `${d.valor}`; // valor
+
+    // craindo button de excluir
+    let btnExcluir = document.createElement("button");
+    // estilizando o btn
+    btnExcluir.className = "btn btn-outline-danger btn-sm";
+    //incremetando (X)
+    btnExcluir.innerHTML = "<i class='fas fa-times'></i>";
+    btnExcluir.id = `id_despesas${d.id}`;
+    // função de excluir despesa
+    btnExcluir.onclick = () => {
+      // excluindo despesas direto do localstorage
+      localStorage.removeItem(d.id);
+      //refresh da pagina, pois quando excluimos as tags ja criada no html nao desaparece, so depois do realod
+      location.reload();
+    };
+
+    row.insertCell(4).append(btnExcluir); // botao excluir
+  });
 };

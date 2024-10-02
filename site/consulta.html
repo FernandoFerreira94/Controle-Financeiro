@@ -20,9 +20,11 @@
     <title>Controle Financeiro</title>
 </head>
 
-<body>
-    <!-- Inicio Navegação / Logo -->
+<!--função que sera executada toda vez que a pagina for carregada-->
 
+<body onload="carregaListaDepesas()">
+
+    <!-- Inicio Navegação / Logo -->
 
     <head>
         <nav class="bg-primary" onclick="menu.offOpacity()">
@@ -56,7 +58,7 @@
 
                     <!--year- -->
                     <select name="year" class="form-control" id="year">
-                        <option value="year">Year</option>
+                        <option value="">Year</option>
                         <option value="2024">2024</option>
                         <option value="2025">2025</option>
                         <option value="2026">2026</option>
@@ -64,7 +66,7 @@
 
                     <!--Month- -->
                     <select name="month" class="form-control" id="month">
-                        <option value="month">Month</option>
+                        <option value="">Month</option>
                         <option value="janeiro">janeiro</option>
                         <option value="fevereiro">fevereiro</option>
                         <option value="março">março</option>
@@ -84,7 +86,7 @@
 
                     <!--Type- -->
                     <select name="type" class="form-control" id="type">
-                        <option value="type">type</option>
+                        <option value="">type</option>
                         <option value="alimentacao">Alimentação</option>
                         <option value="saude">Saúde</option>
                         <option value="lazer">Lazer</option>
@@ -99,7 +101,7 @@
                     <input type="text" class="form-control" id="description" placeholder="Description">
                     <input type="text" class="form-control" id="valor" placeholder="valor">
 
-                    <button type="button" class="btn btn-primary" id="btn"><i
+                    <button onclick="pesquisaDespesas()" type="button" class="btn btn-primary" id="btn"><i
                             class="fa-solid fa-magnifying-glass-dollar"></i></button>
                 </div>
             </div>
@@ -116,7 +118,8 @@
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody id="tbody">
+
                     </tbody>
                 </table>
             </div>

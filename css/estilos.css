@@ -180,13 +180,14 @@ main #btn {
   -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.548);
           box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.548);
   border: 1px solid transparent;
-  border-radius: 10px;
 }
 
-th, tr {
+tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.142);
+}
+
+th {
   width: 150px;
-  border: 1PX SOLID red;
-  text-align: center;
 }
 
 .footer {
