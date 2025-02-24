@@ -36,16 +36,16 @@ nav {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-}
-.nav h2 {
-  text-align: center;
-  font-weight: 500;
-  font-size: 40px;
-}
-.nav #hamburgue {
-  width: 55px;
-  height: 45px;
-  border: 3px solid rgba(0, 0, 0, 0.504);
+        }
+        .nav h2 {
+          text-align: center;
+          font-weight: 500;
+          font-size: 40px;
+        }
+        .nav #hamburgue {
+          width: 55px;
+          height: 45px;
+          border: 3px solid rgba(0, 0, 0, 0.504);
   border-radius: 8px;
   padding: 2px;
   -webkit-transition: all 0.2s;
@@ -54,11 +54,11 @@ nav {
 }
 .nav #hamburgue:hover {
   -webkit-transform: scale(1.08);
-          transform: scale(1.08);
+  transform: scale(1.08);
 }
 .nav #img-menu {
   -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   width: 35px;
 }
 .nav #hamburgue:hover + .menu {
@@ -67,8 +67,8 @@ nav {
 
 main #menu {
   position: fixed;
-  top: 75px;
-  right: 115px;
+  top: 65px;
+  right: 260px;
   background-color: white;
   border-radius: 10px;
   padding: 5px;
@@ -83,6 +83,10 @@ main #menu a {
   text-transform: none;
   font-size: 16px;
   color: black;
+
+  &:hover{
+    text-decoration: underline;
+  }
 }
 main .container {
   margin-top: 30px;
